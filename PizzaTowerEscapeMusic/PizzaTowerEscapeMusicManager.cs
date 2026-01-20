@@ -42,7 +42,7 @@ namespace PizzaTowerEscapeMusic
                 logger.LogWarning("Failed to initialize FacilityMeltdown integration (this is normal if FacilityMeltdown is not installed): " + ex.Message);
             }
             base.gameObject.hideFlags = HideFlags.HideAndDontSave;
-            logger.LogInfo("Plugin bgn.pizzatowerescapemusic is loaded!");
+            logger.LogInfo("Plugin pizzatowerescapemusic is loaded!");
         }
 
         private void Update()

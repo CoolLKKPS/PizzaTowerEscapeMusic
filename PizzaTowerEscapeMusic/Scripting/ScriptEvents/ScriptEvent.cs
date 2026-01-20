@@ -39,7 +39,8 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             PlayerExitedShip,
             ApparatusTaken,
             CurrentMoonChanged,
-            MeltdownStarted
+            MeltdownStarted,
+            ShipInOrbit
         }
     }
 }

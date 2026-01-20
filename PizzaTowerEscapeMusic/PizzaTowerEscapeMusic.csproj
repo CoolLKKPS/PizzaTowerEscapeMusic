@@ -42,6 +42,7 @@
     <Compile Include="Scripting\Conditions\Condition_PlayerLocation.cs" />
     <Compile Include="Scripting\Conditions\Condition_Random.cs" />
     <Compile Include="Scripting\Conditions\Condition_ShipLanded.cs" />
+    <Compile Include="Scripting\Conditions\Condition_ShipInOrbit.cs" />
     <Compile Include="Scripting\Conditions\Condition_ShipLeavingAlertCalled.cs" />
     <Compile Include="Scripting\Conditions\Condition_TimeOfDay.cs" />
     <Compile Include="Scripting\Conditions\Condition_Timer.cs" />

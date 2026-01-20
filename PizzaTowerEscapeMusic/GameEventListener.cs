@@ -43,6 +43,7 @@ namespace PizzaTowerEscapeMusic
             this.CheckDungeonDoneGenerating();
             this.CheckShipLanded();
             this.CheckShipReturnToOrbit();
+            this.CheckShipInOrbit();
             this.CheckShipLeavingAlertCalled();
             this.CheckPlayerDamaged();
             this.CheckPlayerDeath();
@@ -129,6 +130,21 @@ namespace PizzaTowerEscapeMusic
             {
                 this.logger.LogDebug("Ship returned to orbit");
                 this.OnShipReturnToOrbit();
+            }
+        }
+
+        private void CheckShipInOrbit()
+        {
+            bool flag = StartOfRound.Instance != null && StartOfRound.Instance.inShipPhase;
+            bool flag2 = this.UpdateCached<bool>("ShipInOrbit", flag, false);
+            if (flag == flag2)
+            {
+                return;
+            }
+            if (flag)
+            {
+                this.logger.LogDebug("Ship is in orbit");
+                this.OnShipInOrbit();
             }
         }
 
@@ -269,6 +285,10 @@ namespace PizzaTowerEscapeMusic
         };
 
         public Action OnShipReturnToOrbit = delegate
+        {
+        };
+
+        public Action OnShipInOrbit = delegate
         {
         };
 

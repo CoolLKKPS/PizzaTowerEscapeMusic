@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PizzaTowerEscapeMusic
 {
-    [BepInPlugin("bgn.pizzatowerescapemusic", "PizzaTowerEscapeMusic", "2.4.2")]
+    [BepInPlugin("bgn.pizzatowerescapemusic", "PizzaTowerEscapeMusic", "2.4.3")]
     [BepInProcess("Lethal Company.exe")]
     public class Plugin : BaseUnityPlugin
     {

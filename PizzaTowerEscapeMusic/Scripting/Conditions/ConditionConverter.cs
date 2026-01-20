@@ -26,6 +26,7 @@ public class ConditionConverter : JsonConverter<Condition>
             "PlayerCrouching" => new Condition_PlayerCrouching(),
             "PlayerInsanity" => new Condition_PlayerInsanity(),
             "ShipLanded" => new Condition_ShipLanded(),
+            "ShipInOrbit" => new Condition_ShipInOrbit(),
             "ShipLeavingAlertCalled" => new Condition_ShipLeavingAlertCalled(),
             "MusicWithTagPlaying" => new Condition_MusicWithTagPlaying(),
             "CurrentMoon" => new Condition_CurrentMoon(),

@@ -29,7 +29,7 @@ namespace PizzaTowerEscapeMusic
             }));
             GameEventListener gameEventListener3 = this.gameEventListener;
             gameEventListener3.OnSoundManagerDestroyed = (Action)Delegate.Combine(gameEventListener3.OnSoundManagerDestroyed, new Action(PizzaTowerEscapeMusicManager.MusicManager.UnloadMusicClips));
-            PizzaTowerEscapeMusicManager.ScriptManager = new ScriptManager(PizzaTowerEscapeMusicManager.Configuration.scriptingScripts.Value.Split(new char[] { ',' }, StringSplitOptions.None), this.gameEventListener);
+			PizzaTowerEscapeMusicManager.ScriptManager = new ScriptManager(PizzaTowerEscapeMusicManager.Configuration.scriptingScripts.Value.Split(','), this.gameEventListener);
             GameEventListener gameEventListener4 = this.gameEventListener;
             gameEventListener4.OnSoundManagerDestroyed = (Action)Delegate.Combine(gameEventListener4.OnSoundManagerDestroyed, new Action(PizzaTowerEscapeMusicManager.ScriptManager.ClearAllScriptTimers));
             try

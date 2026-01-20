@@ -1,7 +1,6 @@
 ﻿using BepInEx.Logging;
 using PizzaTowerEscapeMusic.Scripting;
 using PizzaTowerEscapeMusic.Scripting.ScriptEvents;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -141,49 +140,50 @@ namespace PizzaTowerEscapeMusic
 
         private AudioSource GetAudioSource()
         {
+            AudioSource audioSource;
             if (MusicManager.audioSourcePool.Count > 0)
             {
-                return MusicManager.audioSourcePool.Pop();
+                audioSource = MusicManager.audioSourcePool.Pop();
             }
-            return base.gameObject.AddComponent<AudioSource>();
+            else
+            {
+                audioSource = base.gameObject.AddComponent<AudioSource>();
+            }
+            return audioSource;
         }
 
         public async void LoadNecessaryMusicClips()
         {
             if (PizzaTowerEscapeMusicManager.ScriptManager.loadedScripts.Count == 0)
             {
-                this.logger.LogError("No scripts are loaded, cannot load their music!");
+                logger.LogError("No scripts are loaded, cannot load their music!");
+                return;
             }
-            else
+            UnloadMusicClips();
+            foreach (Script loadedScript in PizzaTowerEscapeMusicManager.ScriptManager.loadedScripts)
             {
-                this.UnloadMusicClips();
-                foreach (Script script in PizzaTowerEscapeMusicManager.ScriptManager.loadedScripts)
+                ScriptEvent[] scriptEvents = loadedScript.scriptEvents;
+                for (int i = 0; i < scriptEvents.Length; i++)
                 {
-                    ScriptEvent[] array = script.scriptEvents;
-                    for (int i = 0; i < array.Length; i++)
+                    if (!(scriptEvents[i] is ScriptEvent_PlayMusic scriptEvent_PlayMusic))
                     {
-                        ScriptEvent_PlayMusic scriptEvent_PlayMusic = array[i] as ScriptEvent_PlayMusic;
-                        if (scriptEvent_PlayMusic != null)
+                        continue;
+                    }
+                    string[] musicNames = scriptEvent_PlayMusic.musicNames;
+                    foreach (string musicName in musicNames)
+                    {
+                        if (!loadedMusic.ContainsKey(musicName))
                         {
-                            foreach (string musicName in scriptEvent_PlayMusic.musicNames)
+                            AudioClip audioClip = await LoadMusicClip(musicName);
+                            if (!(audioClip == null))
                             {
-                                if (!this.loadedMusic.ContainsKey(musicName))
-                                {
-                                    AudioClip audioClip = await this.LoadMusicClip(musicName);
-                                    if (!(audioClip == null))
-                                    {
-                                        this.loadedMusic.Add(musicName, audioClip);
-                                    }
-                                }
+                                loadedMusic.Add(musicName, audioClip);
                             }
-                            //							string[] array2 = null;
                         }
                     }
-                    array = null;
                 }
-                //				List<Script>.Enumerator enumerator = default(List<Script>.Enumerator);
-                this.logger.LogInfo("Music clips done loading");
             }
+            logger.LogInfo("Music clips done loading");
         }
 
         public void UnloadMusicClips()
@@ -241,7 +241,7 @@ namespace PizzaTowerEscapeMusic
                 finalFileName = musicFileName + ".wav";
                 return;
             }
-            string text = musicFileName.Split(new char[] { '.' }, StringSplitOptions.None).Last<string>().ToLower();
+            string text = musicFileName.Split('.').Last<string>().ToLower();
             AudioType audioType2;
             if (!(text == "ogg"))
             {

@@ -11,13 +11,13 @@ namespace PizzaTowerEscapeMusic
             string[] directories = Directory.GetDirectories(Paths.PluginPath);
             for (int i = 0; i < directories.Length; i++)
             {
-                string text = directories[i] + "/PizzaTowerEscapeMusic/" + path;
+                string text = directories[i] + "/BGN-PizzaTowerEscapeMusic/" + path;
                 if (File.Exists(text))
                 {
                     return text;
                 }
             }
-            string text2 = Paths.PluginPath + "/PizzaTowerEscapeMusic_Custom/" + path;
+            string text2 = Paths.PluginPath + "/BGN-PizzaTowerEscapeMusic_Custom/" + path;
             if (File.Exists(text2))
             {
                 return text2;

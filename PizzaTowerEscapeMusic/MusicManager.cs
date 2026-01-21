@@ -12,7 +12,7 @@ namespace PizzaTowerEscapeMusic
     public class MusicManager : MonoBehaviour
     {
         private Dictionary<string, float> lastGetIsMusicPlayingLogTimeByTag = new Dictionary<string, float>();
-        
+
         private bool enablelogCooldown = true;
 
         private void Awake()

@@ -34,6 +34,7 @@ public class ConditionConverter : JsonConverter<Condition>
             "Random" => new Condition_Random(),
             "ApparatusDocked" => new Condition_ApparatusDocked(),
             "TimeOfDay" => new Condition_TimeOfDay(),
+            "SelectedLabel" => new Condition_SelectedLabel(),
             _ => throw new Exception($"Condition type \"{value}\" does not exist"),
         };
         serializer.Populate(jObject.CreateReader(), condition);

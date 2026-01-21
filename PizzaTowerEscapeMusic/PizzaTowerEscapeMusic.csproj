@@ -47,6 +47,7 @@
     <Compile Include="Scripting\Conditions\Condition_TimeOfDay.cs" />
     <Compile Include="Scripting\Conditions\Condition_Timer.cs" />
     <Compile Include="Scripting\Conditions\Condition_Weather.cs" />
+    <Compile Include="Scripting\Conditions\Condition_SelectedLabel.cs" />
     <Compile Include="Scripting\Script.cs" />
     <Compile Include="Scripting\ScriptEvents\ScriptEvent.cs" />
     <Compile Include="Scripting\ScriptEvents\ScriptEventConverter.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Scripting\ScriptEvents\ScriptEvent_ResetTimers.cs" />
     <Compile Include="Scripting\ScriptEvents\ScriptEvent_SetVolumeGroupMasterVolume.cs" />
     <Compile Include="Scripting\ScriptEvents\ScriptEvent_StopMusic.cs" />
+    <Compile Include="Scripting\ScriptEvents\ScriptEvent_LabelRandom.cs" />
     <Compile Include="Scripting\ScriptManager.cs" />
     <Compile Include="System\Runtime\CompilerServices\NullableAttribute.cs" />
     <Compile Include="System\Runtime\CompilerServices\NullableContextAttribute.cs" />

@@ -6,6 +6,6 @@
 
         public const string PLUGIN_NAME = "PizzaTowerEscapeMusic";
 
-        public const string PLUGIN_VERSION = "2.4.2";
+        public const string PLUGIN_VERSION = "2.4.5";
     }
 }

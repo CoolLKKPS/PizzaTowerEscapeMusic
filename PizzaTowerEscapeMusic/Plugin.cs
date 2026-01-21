@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PizzaTowerEscapeMusic
 {
-    [BepInPlugin("bgn.pizzatowerescapemusic", "PizzaTowerEscapeMusic", "2.4.3")]
+    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInProcess("Lethal Company.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -14,6 +14,6 @@ namespace PizzaTowerEscapeMusic
             gameObject.hideFlags = HideFlags.HideAndDontSave;
         }
 
-        public const string GUID = "bgn.pizzatowerescapemusic";
+        // public const string GUID = "bgn.pizzatowerescapemusic";
     }
 }

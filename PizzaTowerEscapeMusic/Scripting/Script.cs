@@ -93,6 +93,9 @@ namespace PizzaTowerEscapeMusic.Scripting
         [JsonIgnore]
         public readonly Dictionary<string, Script.Timer> activeTimers = new Dictionary<string, Script.Timer>();
 
+        [JsonIgnore]
+        public string selectedLabel = string.Empty;
+
         public class VolumeRule
         {
             public string comment = string.Empty;

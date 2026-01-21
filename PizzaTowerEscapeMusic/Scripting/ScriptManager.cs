@@ -117,14 +117,34 @@ namespace PizzaTowerEscapeMusic.Scripting
                     {
                         if (scriptEvent.CheckConditions(script))
                         {
-                            this.Logger.LogDebug(string.Concat(new string[]
+                            bool shouldLog = true;
+                            if (this.enablelogCooldown)
                             {
-                                "Conditions for a script event have been met!\n Script Event Type: ",
-                                scriptEvent.scriptEventType,
-                                string.Format("\n   Game Event Type: {0}", scriptEvent.gameEventType),
-                                "\n           Comment: ",
-                                scriptEvent.comment
-                            }));
+                                float lastLogTime;
+                                if (!this.lastLogTimeByEvent.TryGetValue(eventType, out lastLogTime))
+                                {
+                                    lastLogTime = -15f;
+                                }
+                                if (UnityEngine.Time.time - lastLogTime >= 15f)
+                                {
+                                    this.lastLogTimeByEvent[eventType] = UnityEngine.Time.time;
+                                }
+                                else
+                                {
+                                    shouldLog = false;
+                                }
+                            }
+                            if (shouldLog)
+                            {
+                                this.Logger.LogDebug(string.Concat(new string[]
+                                {
+                                    "Conditions for a script event have been met!\n Script Event Type: ",
+                                    scriptEvent.scriptEventType,
+                                    string.Format("\n   Game Event Type: {0}", scriptEvent.gameEventType),
+                                    "\n           Comment: ",
+                                    scriptEvent.comment
+                                }));
+                            }
                             scriptEvent.Run(script);
                         }
                     }
@@ -169,6 +189,10 @@ namespace PizzaTowerEscapeMusic.Scripting
                 script.ClearTimers();
             }
         }
+
+        private Dictionary<ScriptEvent.GameEventType, float> lastLogTimeByEvent = new Dictionary<ScriptEvent.GameEventType, float>();
+
+        private bool enablelogCooldown = true;
 
         public readonly List<Script> loadedScripts = new List<Script>();
     }

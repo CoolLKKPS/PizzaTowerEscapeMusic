@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using UnityEngine;
 
 namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
 {
@@ -8,6 +7,11 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
     {
         public override void Run(Script script)
         {
+            if (string.IsNullOrEmpty(this.group))
+            {
+                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: group must be specified and non-empty.");
+                return;
+            }
             if (this.labels.Length == 0)
             {
                 return;
@@ -69,10 +73,14 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
 
             if (selected != null)
             {
-                script.selectedLabel = selected;
-                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug($"LabelRandom: selected label '{selected}'");
+                string groupKey = string.IsNullOrEmpty(this.group) ? "" : this.group;
+                script.selectedLabelsByGroup[groupKey] = selected;
+                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug($"LabelRandom: selected label '{selected}' for group '{groupKey}'");
             }
         }
+
+        [JsonRequired]
+        public string group = string.Empty;
 
         [JsonRequired]
         public string[] labels = Array.Empty<string>();

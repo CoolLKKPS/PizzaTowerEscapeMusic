@@ -11,6 +11,10 @@ namespace PizzaTowerEscapeMusic
 {
     public class MusicManager : MonoBehaviour
     {
+        private Dictionary<string, float> lastGetIsMusicPlayingLogTimeByTag = new Dictionary<string, float>();
+        
+        private bool enablelogCooldown = true;
+
         private void Awake()
         {
             this.logger = BepInEx.Logging.Logger.CreateLogSource("PizzaTowerEscapeMusic MusicManager");
@@ -62,10 +66,50 @@ namespace PizzaTowerEscapeMusic
             List<MusicManager.MusicInstance> list;
             if (MusicManager.musicInstancesByTag.TryGetValue(tag, out list))
             {
-                this.logger.LogDebug(string.Format("GetIsMusicPlaying says there's {0} music instance(s) with the tag \"{1}\"", list.Count, tag));
+                bool shouldLog = true;
+                if (this.enablelogCooldown)
+                {
+                    float lastLogTime;
+                    if (!this.lastGetIsMusicPlayingLogTimeByTag.TryGetValue(tag, out lastLogTime))
+                    {
+                        lastLogTime = -30f;
+                    }
+                    if (UnityEngine.Time.time - lastLogTime >= 30f)
+                    {
+                        this.lastGetIsMusicPlayingLogTimeByTag[tag] = UnityEngine.Time.time;
+                    }
+                    else
+                    {
+                        shouldLog = false;
+                    }
+                }
+                if (shouldLog)
+                {
+                    this.logger.LogDebug(string.Format("GetIsMusicPlaying says there's {0} music instance(s) with the tag \"{1}\"", list.Count, tag));
+                }
                 return list.Count > 0;
             }
-            this.logger.LogDebug("GetIsMusicPlaying says there was no music instance list for tag \"" + tag + "\"");
+            bool shouldLog2 = true;
+            if (this.enablelogCooldown)
+            {
+                float lastLogTime2;
+                if (!this.lastGetIsMusicPlayingLogTimeByTag.TryGetValue(tag, out lastLogTime2))
+                {
+                    lastLogTime2 = -30f;
+                }
+                if (UnityEngine.Time.time - lastLogTime2 >= 30f)
+                {
+                    this.lastGetIsMusicPlayingLogTimeByTag[tag] = UnityEngine.Time.time;
+                }
+                else
+                {
+                    shouldLog2 = false;
+                }
+            }
+            if (shouldLog2)
+            {
+                this.logger.LogDebug("GetIsMusicPlaying says there was no music instance list for tag \"" + tag + "\"");
+            }
             return false;
         }
 

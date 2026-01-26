@@ -42,7 +42,7 @@ namespace PizzaTowerEscapeMusic
             return GameEventListener.dockedApparatus != null;
         }
 
-        private void StartComparerandomMapSeed()
+        private void StartSyncedrandomMapSeed()
         {
             if (global::StartOfRound.Instance != null && Networking.SeedSyncService.SeedReceived && !syncedrandomMapSeed)
             {
@@ -64,7 +64,7 @@ namespace PizzaTowerEscapeMusic
             }
         }
 
-        private void ResetComparerandomMapSeed()
+        private void ResetSyncedrandomMapSeed()
         {
             if (syncedrandomMapSeed)
             {
@@ -93,7 +93,7 @@ namespace PizzaTowerEscapeMusic
             this.CheckApparatusTaken();
             this.CheckCurrentMoonChanged();
             this.CheckStartOfRoundNull();
-            this.StartComparerandomMapSeed();
+            this.StartSyncedrandomMapSeed();
         }
 
         private T UpdateCached<T>(string key, T currentValue, T defaultValue)
@@ -312,8 +312,8 @@ namespace PizzaTowerEscapeMusic
             if (isNull)
             {
                 this.logger.LogDebug("StartOfRound instance became null");
-                this.ResetComparerandomMapSeed();
-                Networking.SeedSyncService.Reset();
+                this.ResetSyncedrandomMapSeed();
+                Networking.SeedSyncService.ResetSeedReceived();
                 ScriptEvent_LabelRandom.ClearQueueAndFlags();
             }
         }
@@ -387,7 +387,7 @@ namespace PizzaTowerEscapeMusic
         private int localSeed = 0;
 
         private bool syncedrandomMapSeed = false;
-        
+
         public static bool SyncedrandomMapSeed => Instance != null && Instance.syncedrandomMapSeed;
 
         public Action<SelectableLevel> OnCurrentMoonChanged = delegate (SelectableLevel l)

@@ -28,7 +28,7 @@ namespace PizzaTowerEscapeMusic.Networking
             }
         }
 
-        public static void Reset()
+        public static void ResetSeedReceived()
         {
             if (seedReceived)
             {

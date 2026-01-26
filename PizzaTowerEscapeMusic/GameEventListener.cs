@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using PizzaTowerEscapeMusic.Scripting.ScriptEvents;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +8,18 @@ namespace PizzaTowerEscapeMusic
 {
     public class GameEventListener : MonoBehaviour
     {
+        public static GameEventListener Instance { get; private set; }
+
         private void Awake()
         {
             this.logger = BepInEx.Logging.Logger.CreateLogSource("PizzaTowerEscapeMusic GameEventListener");
+            Instance = this;
             this.OnShipLanded = (Action)Delegate.Combine(this.OnShipLanded, new Action(this.FindDockedApparatus));
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
         }
 
         private void FindDockedApparatus()
@@ -51,6 +60,7 @@ namespace PizzaTowerEscapeMusic
             this.CheckPlayerInsideShip();
             this.CheckApparatusTaken();
             this.CheckCurrentMoonChanged();
+            this.CheckStartOfRoundNull();
         }
 
         private T UpdateCached<T>(string key, T currentValue, T defaultValue)
@@ -256,6 +266,22 @@ namespace PizzaTowerEscapeMusic
             }
             this.logger.LogDebug("Level has changed to " + ((selectableLevel != null) ? selectableLevel.PlanetName : null));
             this.OnCurrentMoonChanged(selectableLevel);
+        }
+
+        private void CheckStartOfRoundNull()
+        {
+            bool isNull = StartOfRound.Instance == null;
+            bool wasNull = this.UpdateCached<bool>("StartOfRoundNull", isNull, false);
+            if (isNull == wasNull)
+            {
+                return;
+            }
+            if (isNull)
+            {
+                this.logger.LogDebug("StartOfRound instance became null");
+                Networking.SeedSyncService.Reset();
+                ScriptEvent_LabelRandom.ClearQueueAndFlags();
+            }
         }
 
         private ManualLogSource logger;

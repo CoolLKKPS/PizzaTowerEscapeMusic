@@ -1,0 +1,50 @@
+using BepInEx.Logging;
+using HarmonyLib;
+using System;
+using System.Reflection;
+
+namespace PizzaTowerEscapeMusic.Networking
+{
+    [HarmonyPatch]
+    internal static class SeedSyncPatches
+    {
+        private static ManualLogSource logger = Logger.CreateLogSource("PizzaTowerEscapeMusic SeedSync Patches");
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(StartOfRound), "OnPlayerConnectedClientRpc", new Type[] {
+            typeof(ulong), typeof(int), typeof(ulong[]), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(bool)
+        })]
+        private static void OnPlayerConnectedClientRpc_Postfix(ulong clientId, int connectedPlayers, ulong[] connectedPlayerIdsOrdered, int assignedPlayerObjectId, int serverMoneyAmount, int levelID, int profitQuota, int timeUntilDeadline, int quotaFulfilled, int randomSeed, bool isChallenge)
+        {
+            logger.LogDebug($"OnPlayerConnectedClientRpc captured randomSeed: {randomSeed}");
+            SeedSyncService.SetSeedReceived();
+        }
+        internal static void ApplyPatches()
+        {
+            try
+            {
+                var harmony = new Harmony("com.pizzatowerescapemusic.seedsync");
+                harmony.PatchAll(Assembly.GetExecutingAssembly());
+                logger.LogInfo("Seed sync Harmony patches applied successfully.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to apply seed sync Harmony patches: {ex}");
+            }
+        }
+
+        internal static void RemovePatches()
+        {
+            try
+            {
+                var harmony = new Harmony("com.pizzatowerescapemusic.seedsync");
+                harmony.UnpatchSelf();
+                logger.LogInfo("Seed sync Harmony patches removed.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to remove seed sync Harmony patches: {ex}");
+            }
+        }
+    }
+}

@@ -70,7 +70,7 @@ namespace PizzaTowerEscapeMusic
             {
                 localSeed = 0;
                 syncedrandomMapSeed = false;
-                logger.LogDebug("SyncedrandomMapSeed flag reset.");
+                logger.LogDebug("SyncedrandomMapSeed flag reset");
             }
         }
 

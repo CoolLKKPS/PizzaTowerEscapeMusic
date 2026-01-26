@@ -25,7 +25,7 @@ namespace PizzaTowerEscapeMusic.Networking
             {
                 var harmony = new Harmony("com.pizzatowerescapemusic.seedsync");
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
-                logger.LogInfo("Seed sync Harmony patches applied successfully.");
+                logger.LogInfo("Seed sync Harmony patches applied successfully");
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ namespace PizzaTowerEscapeMusic.Networking
             {
                 var harmony = new Harmony("com.pizzatowerescapemusic.seedsync");
                 harmony.UnpatchSelf();
-                logger.LogInfo("Seed sync Harmony patches removed.");
+                logger.LogInfo("Seed sync Harmony patches removed");
             }
             catch (Exception ex)
             {

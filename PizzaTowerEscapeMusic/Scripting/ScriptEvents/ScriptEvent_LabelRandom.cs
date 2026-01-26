@@ -26,7 +26,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
         {
             if (string.IsNullOrEmpty(this.group))
             {
-                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: group must be specified and non-empty.");
+                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: group must be specified and non-empty");
                 return;
             }
             if (this.labels.Length == 0)
@@ -78,7 +78,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             {
                 if (StartOfRound.Instance == null)
                 {
-                    PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: StartOfRound instance is null, skipping.");
+                    PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: StartOfRound instance is null, skipping");
                     return;
                 }
 
@@ -121,7 +121,30 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
 
         private static void OnSeedReceived()
         {
-            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: seed received, processing queued events.");
+            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: OnSeedReceived");
+            if (GameEventListener.SyncedrandomMapSeed)
+            {
+                ProcessQueue();
+            }
+            else
+            {
+                var gameEventListener = global::PizzaTowerEscapeMusic.GameEventListener.Instance ?? UnityEngine.Object.FindObjectOfType<global::PizzaTowerEscapeMusic.GameEventListener>();
+                if (gameEventListener == null)
+                {
+                    PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: cannot find GameEventListener instance, cannot wait for sync");
+                    return;
+                }
+                gameEventListener.StartCoroutine(WaitForSyncedThenProcess());
+            }
+        }
+
+        private static IEnumerator WaitForSyncedThenProcess()
+        {
+            while (!GameEventListener.SyncedrandomMapSeed)
+            {
+                yield return new WaitForSeconds(0.2f);
+            }
+            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: SyncedrandomMapSeed");
             ProcessQueue();
         }
 
@@ -131,7 +154,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             var gameEventListener = global::PizzaTowerEscapeMusic.GameEventListener.Instance ?? UnityEngine.Object.FindObjectOfType<global::PizzaTowerEscapeMusic.GameEventListener>();
             if (gameEventListener == null)
             {
-                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: cannot find GameEventListener instance, cannot start delay coroutine.");
+                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: cannot find GameEventListener instance, cannot start delay coroutine");
                 return;
             }
             gameEventListener.StartCoroutine(ProcessQueueWithDelay());
@@ -147,7 +170,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
                 ExecuteWithDelay(queued.script, queued.group, queued.labels, queued.entries, queued.totalWeight);
             }
             queueProcessing = false;
-            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: queue processed.");
+            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: queue processed");
         }
 
         private static void ExecuteWithDelay(Script script, string group, string[] labels, List<(string label, float weight)> entries, float totalWeight)
@@ -155,7 +178,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             var gameEventListener = global::PizzaTowerEscapeMusic.GameEventListener.Instance ?? UnityEngine.Object.FindObjectOfType<global::PizzaTowerEscapeMusic.GameEventListener>();
             if (gameEventListener == null)
             {
-                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: cannot find GameEventListener to start coroutine, falling back to immediate selection.");
+                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("LabelRandom: cannot find GameEventListener to start coroutine, falling back to immediate selection");
                 SelectLabelWithSeed(script, group, labels, entries, totalWeight);
                 return;
             }
@@ -209,7 +232,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             queueProcessing = false;
             subscribedToSeedReceived = false;
             Networking.SeedSyncService.OnSeedReceived -= OnSeedReceived;
-            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: queue and flags cleared.");
+            PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug("LabelRandom: queue and flags cleared");
         }
 
         [JsonRequired]

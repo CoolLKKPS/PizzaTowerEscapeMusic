@@ -34,7 +34,7 @@ namespace PizzaTowerEscapeMusic.Networking
             {
                 capturedSeed = -1;
                 seedReceived = false;
-                logger.LogDebug("SeedReceived flag reset.");
+                logger.LogDebug("SeedReceived flag reset");
             }
         }
 

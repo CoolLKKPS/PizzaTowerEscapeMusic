@@ -8,7 +8,7 @@ namespace PizzaTowerEscapeMusic.Networking
     [HarmonyPatch]
     internal static class SeedSyncPatches
     {
-        private static ManualLogSource logger = Logger.CreateLogSource("PizzaTowerEscapeMusic SeedSync Patches");
+        private static ManualLogSource logger = Logger.CreateLogSource("PizzaTowerEscapeMusic SeedSyncPatches");
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(StartOfRound), "OnPlayerConnectedClientRpc", new Type[] {

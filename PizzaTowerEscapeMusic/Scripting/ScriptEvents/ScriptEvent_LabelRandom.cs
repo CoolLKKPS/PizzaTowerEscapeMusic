@@ -82,7 +82,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
                     return;
                 }
 
-                bool seedReady = (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer) || Networking.SeedSyncService.SeedReceived;
+                bool seedReady = (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer) || (Networking.SeedSyncService.SeedReceived && GameEventListener.SyncedrandomMapSeed);
                 if (seedReady)
                 {
                     ExecuteWithDelay(script, this.group, this.labels, entries, totalWeight);
@@ -140,7 +140,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
         private static IEnumerator ProcessQueueWithDelay()
         {
             queueProcessing = true;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
             while (pendingEvents.Count > 0)
             {
                 var queued = pendingEvents.Dequeue();
@@ -164,7 +164,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
 
         private static IEnumerator DelayedSelection(Script script, string group, string[] labels, List<(string label, float weight)> entries, float totalWeight)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
             SelectLabelWithSeed(script, group, labels, entries, totalWeight);
         }
 

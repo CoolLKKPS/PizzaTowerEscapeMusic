@@ -17,7 +17,7 @@ namespace PizzaTowerEscapeMusic.Networking
         private static void OnPlayerConnectedClientRpc_Postfix(ulong clientId, int connectedPlayers, ulong[] connectedPlayerIdsOrdered, int assignedPlayerObjectId, int serverMoneyAmount, int levelID, int profitQuota, int timeUntilDeadline, int quotaFulfilled, int randomSeed, bool isChallenge)
         {
             logger.LogDebug($"OnPlayerConnectedClientRpc captured randomSeed: {randomSeed}");
-            SeedSyncService.SetSeedReceived();
+            SeedSyncService.SetSeedReceived(randomSeed);
         }
         internal static void ApplyPatches()
         {

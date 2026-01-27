@@ -97,6 +97,10 @@ namespace PizzaTowerEscapeMusic.Scripting
             {
                 this.CheckScriptEvents(ScriptEvent.GameEventType.MeltdownStarted);
             }));
+            gameEventListener.OnShipNotInOrbit = (Action)Delegate.Combine(gameEventListener.OnShipNotInOrbit, new Action(delegate
+            {
+                this.CheckScriptEvents(ScriptEvent.GameEventType.ShipNotInOrbit);
+            }));
             gameEventListener.OnCurrentMoonChanged = (Action<SelectableLevel>)Delegate.Combine(gameEventListener.OnCurrentMoonChanged, new Action<SelectableLevel>(delegate (SelectableLevel l)
             {
                 this.CheckScriptEvents(ScriptEvent.GameEventType.CurrentMoonChanged);

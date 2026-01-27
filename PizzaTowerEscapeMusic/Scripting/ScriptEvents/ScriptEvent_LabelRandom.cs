@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
@@ -82,7 +81,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
                     return;
                 }
 
-                bool seedReady = (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer) || (Networking.SeedSyncService.SeedReceived && GameEventListener.SyncedrandomMapSeed);
+                bool seedReady = (StartOfRound.Instance.IsHost && StartOfRound.Instance.IsServer) || (Networking.SeedSyncService.SeedReceived && GameEventListener.SyncedrandomMapSeed) || (PizzaTowerEscapeMusicManager.Configuration.dontQueue != null && PizzaTowerEscapeMusicManager.Configuration.dontQueue.Value);
                 if (seedReady)
                 {
                     ExecuteWithDelay(script, this.group, this.labels, entries, totalWeight);

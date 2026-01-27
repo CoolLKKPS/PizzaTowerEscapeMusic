@@ -85,6 +85,7 @@ namespace PizzaTowerEscapeMusic
             this.CheckShipLanded();
             this.CheckShipReturnToOrbit();
             this.CheckShipInOrbit();
+            this.CheckShipNotInOrbit();
             this.CheckShipLeavingAlertCalled();
             this.CheckPlayerDamaged();
             this.CheckPlayerDeath();
@@ -318,6 +319,21 @@ namespace PizzaTowerEscapeMusic
             }
         }
 
+        private void CheckShipNotInOrbit()
+        {
+            bool notInOrbit = StartOfRound.Instance != null && !StartOfRound.Instance.inShipPhase;
+            bool wasNotInOrbit = this.UpdateCached<bool>("ShipNotInOrbit", notInOrbit, true);
+            if (notInOrbit == wasNotInOrbit)
+            {
+                return;
+            }
+            if (notInOrbit)
+            {
+                this.logger.LogDebug("Ship not in orbit");
+                this.OnShipNotInOrbit();
+            }
+        }
+
         private ManualLogSource logger;
 
         public Action OnFrameUpdate = delegate
@@ -384,22 +400,26 @@ namespace PizzaTowerEscapeMusic
         {
         };
 
+        public Action OnMeltdownStarted = delegate
+        {
+        };
+
+        public Action OnShipNotInOrbit = delegate
+        {
+        };
+
+        public Action<SelectableLevel> OnCurrentMoonChanged = delegate (SelectableLevel l)
+        {
+        };
+
         private int localSeed = 0;
 
         private bool syncedrandomMapSeed = false;
 
         public static bool SyncedrandomMapSeed => Instance != null && Instance.syncedrandomMapSeed;
 
-        public Action<SelectableLevel> OnCurrentMoonChanged = delegate (SelectableLevel l)
-        {
-        };
-
         private readonly Dictionary<string, object> previousValues = new Dictionary<string, object>();
 
         private static LungProp dockedApparatus;
-
-        public Action OnMeltdownStarted = delegate
-        {
-        };
     }
 }

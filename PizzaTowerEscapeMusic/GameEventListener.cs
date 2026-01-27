@@ -222,6 +222,7 @@ namespace PizzaTowerEscapeMusic
             {
                 this.logger.LogDebug("Ship is in orbit");
                 this.OnShipInOrbit();
+                EndOfGameCalled = false;
             }
         }
 

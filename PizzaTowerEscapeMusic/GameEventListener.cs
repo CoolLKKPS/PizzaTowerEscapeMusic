@@ -83,7 +83,7 @@ namespace PizzaTowerEscapeMusic
             this.CheckSoundManager();
             this.CheckDungeonDoneGenerating();
             this.CheckLevelLoaded();
-            this.CheckEndOfRound();
+            this.CheckEndOfGame();
             this.CheckShipLanded();
             this.CheckShipReturnToOrbit();
             this.CheckShipInOrbit();
@@ -157,19 +157,19 @@ namespace PizzaTowerEscapeMusic
             }
         }
 
-        private void CheckEndOfRound()
+        private void CheckEndOfGame()
         {
-            bool flag = StartOfRound.Instance != null && DespawnPropsCalled;
-            bool flag2 = this.UpdateCached<bool>("EndOfRound", flag, false);
+            bool flag = StartOfRound.Instance != null && EndOfGameCalled;
+            bool flag2 = this.UpdateCached<bool>("EndOfGame", flag, false);
             if (flag == flag2)
             {
                 return;
             }
             if (flag)
             {
-                this.logger.LogDebug("End of round");
-                this.OnEndOfRound();
-                DespawnPropsCalled = false;
+                this.logger.LogDebug("End of game");
+                this.OnEndOfGame();
+                EndOfGameCalled = false;
             }
         }
 
@@ -222,8 +222,6 @@ namespace PizzaTowerEscapeMusic
             {
                 this.logger.LogDebug("Ship is in orbit");
                 this.OnShipInOrbit();
-                DespawnPropsCalled = false;
-                LastDespawnAllItems = false;
             }
         }
 
@@ -391,7 +389,7 @@ namespace PizzaTowerEscapeMusic
         {
         };
 
-        public Action OnEndOfRound = delegate
+        public Action OnEndOfGame = delegate
         {
         };
 
@@ -463,10 +461,8 @@ namespace PizzaTowerEscapeMusic
 
         private readonly Dictionary<string, object> previousValues = new Dictionary<string, object>();
 
-        public static bool DespawnPropsCalled { get; set; }
-        
-        public static bool LastDespawnAllItems { get; set; }
-
         private static LungProp dockedApparatus;
+
+        public static bool EndOfGameCalled { get; set; }
     }
 }

@@ -22,6 +22,7 @@ public class ConditionConverter : JsonConverter<Condition>
             "Weather" => new Condition_Weather(),
             "PlayerLocation" => new Condition_PlayerLocation(),
             "PlayerAlive" => new Condition_PlayerAlive(),
+            "AllPlayersDead" => new Condition_AllPlayersDead(),
             "PlayerHealth" => new Condition_PlayerHealth(),
             "PlayerCrouching" => new Condition_PlayerCrouching(),
             "PlayerInsanity" => new Condition_PlayerInsanity(),

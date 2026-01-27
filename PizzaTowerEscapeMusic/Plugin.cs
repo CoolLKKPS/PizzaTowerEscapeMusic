@@ -10,7 +10,7 @@ namespace PizzaTowerEscapeMusic
         private void Awake()
         {
             Networking.SeedSyncPatches.ApplyPatches();
-            DespawnPropsPatches.ApplyPatches();
+            EndOfGamePatches.ApplyPatches();
             GameObject gameObject = new GameObject("PizzaTowerEscapeMusic Manager");
             gameObject.AddComponent<PizzaTowerEscapeMusicManager>().Initialise(base.Logger, base.Config);
             gameObject.hideFlags = HideFlags.HideAndDontSave;

@@ -43,7 +43,7 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             ShipInOrbit,
             ShipNotInOrbit,
             LevelLoaded,
-            EndOfRound
+            EndOfGame
         }
     }
 }

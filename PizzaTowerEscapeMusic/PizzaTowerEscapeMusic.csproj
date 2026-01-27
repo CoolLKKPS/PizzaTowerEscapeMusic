@@ -36,6 +36,7 @@
     <Compile Include="Scripting\Conditions\Condition_Not.cs" />
     <Compile Include="Scripting\Conditions\Condition_Or.cs" />
     <Compile Include="Scripting\Conditions\Condition_PlayerAlive.cs" />
+    <Compile Include="Scripting\Conditions\Condition_AllPlayersDead.cs" />
     <Compile Include="Scripting\Conditions\Condition_PlayerCrouching.cs" />
     <Compile Include="Scripting\Conditions\Condition_PlayerHealth.cs" />
     <Compile Include="Scripting\Conditions\Condition_PlayerInsanity.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="Scripting\ScriptManager.cs" />
     <Compile Include="Networking\SeedSyncService.cs" />
     <Compile Include="Networking\SeedSyncPatches.cs" />
-    <Compile Include="DespawnPropsPatches.cs" />
+    <Compile Include="EndOfGamePatches.cs" />
     <Compile Include="System\Runtime\CompilerServices\NullableAttribute.cs" />
     <Compile Include="System\Runtime\CompilerServices\NullableContextAttribute.cs" />
     <Compile Include="System\Runtime\CompilerServices\RefSafetyRulesAttribute.cs" />

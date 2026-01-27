@@ -82,6 +82,7 @@ namespace PizzaTowerEscapeMusic
             }
             this.CheckSoundManager();
             this.CheckDungeonDoneGenerating();
+            this.CheckLevelLoaded();
             this.CheckShipLanded();
             this.CheckShipReturnToOrbit();
             this.CheckShipInOrbit();
@@ -137,6 +138,21 @@ namespace PizzaTowerEscapeMusic
             {
                 this.logger.LogDebug("Dungeon done generating");
                 this.OnDungeonDoneGenerating();
+            }
+        }
+
+        private void CheckLevelLoaded()
+        {
+            bool flag = RoundManager.Instance != null && RoundManager.Instance.dungeonFinishedGeneratingForAllPlayers;
+            bool flag2 = this.UpdateCached<bool>("LevelLoaded", flag, false);
+            if (flag == flag2)
+            {
+                return;
+            }
+            if (flag)
+            {
+                this.logger.LogDebug("Level loaded");
+                this.OnLevelLoaded();
             }
         }
 
@@ -349,6 +365,10 @@ namespace PizzaTowerEscapeMusic
         };
 
         public Action OnDungeonDoneGenerating = delegate
+        {
+        };
+
+        public Action OnLevelLoaded = delegate
         {
         };
 

@@ -42,7 +42,8 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             MeltdownStarted,
             ShipInOrbit,
             ShipNotInOrbit,
-            LevelLoaded
+            LevelLoaded,
+            EndOfRound
         }
     }
 }

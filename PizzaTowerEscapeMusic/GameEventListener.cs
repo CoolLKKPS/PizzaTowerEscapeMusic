@@ -83,6 +83,7 @@ namespace PizzaTowerEscapeMusic
             this.CheckSoundManager();
             this.CheckDungeonDoneGenerating();
             this.CheckLevelLoaded();
+            this.CheckEndOfRound();
             this.CheckShipLanded();
             this.CheckShipReturnToOrbit();
             this.CheckShipInOrbit();
@@ -156,6 +157,22 @@ namespace PizzaTowerEscapeMusic
             }
         }
 
+        private void CheckEndOfRound()
+        {
+            bool flag = StartOfRound.Instance != null && DespawnPropsCalled;
+            bool flag2 = this.UpdateCached<bool>("EndOfRound", flag, false);
+            if (flag == flag2)
+            {
+                return;
+            }
+            if (flag)
+            {
+                this.logger.LogDebug("End of round");
+                this.OnEndOfRound();
+                DespawnPropsCalled = false;
+            }
+        }
+
         private void CheckShipLanded()
         {
             bool flag = StartOfRound.Instance != null && StartOfRound.Instance.shipHasLanded;
@@ -205,6 +222,8 @@ namespace PizzaTowerEscapeMusic
             {
                 this.logger.LogDebug("Ship is in orbit");
                 this.OnShipInOrbit();
+                DespawnPropsCalled = false;
+                LastDespawnAllItems = false;
             }
         }
 
@@ -372,6 +391,10 @@ namespace PizzaTowerEscapeMusic
         {
         };
 
+        public Action OnEndOfRound = delegate
+        {
+        };
+
         public Action OnShipLanded = delegate
         {
         };
@@ -439,6 +462,10 @@ namespace PizzaTowerEscapeMusic
         public static bool SyncedrandomMapSeed => Instance != null && Instance.syncedrandomMapSeed;
 
         private readonly Dictionary<string, object> previousValues = new Dictionary<string, object>();
+
+        public static bool DespawnPropsCalled { get; set; }
+        
+        public static bool LastDespawnAllItems { get; set; }
 
         private static LungProp dockedApparatus;
     }

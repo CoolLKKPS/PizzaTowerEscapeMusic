@@ -123,6 +123,18 @@ namespace PizzaTowerEscapeMusic
                 string.Format("\nAny music playing?:          {0}", this.GetIsMusicPlaying(null)),
                 string.Format("\nAny music playing with tag?: {0}", this.GetIsMusicPlaying(musicEvent.tag))
             }));
+            string text = musicEvent.musicNames[global::UnityEngine.Random.Range(0, musicEvent.musicNames.Length)];
+            if (!this.musicLoaded)
+            {
+                this.pendingMusicPlays.Enqueue(new PendingMusicPlay
+                {
+                    script = script,
+                    musicEvent = musicEvent,
+                    musicName = text
+                });
+                this.logger.LogDebug($"Music not loaded yet, queued play request for '{text}' (queue size: {this.pendingMusicPlays.Count})");
+                return;
+            }
             if (musicEvent.overlapHandling == ScriptEvent_PlayMusic.OverlapHandling.IgnoreAll && this.GetIsMusicPlaying(null))
             {
                 this.logger.LogDebug("PlayMusic canceled because other music was playing");
@@ -148,7 +160,6 @@ namespace PizzaTowerEscapeMusic
                     this.FadeStopMusic(musicEvent.tag);
                     break;
             }
-            string text = musicEvent.musicNames[global::UnityEngine.Random.Range(0, musicEvent.musicNames.Length)];
             AudioClip audioClip;
             this.loadedMusic.TryGetValue(text, out audioClip);
             if (audioClip != null)
@@ -160,8 +171,57 @@ namespace PizzaTowerEscapeMusic
             this.logger.LogWarning("Music (" + text + ") is null, cannot play. Maybe it wasn't loaded correctly?");
         }
 
+        private void ProcessPendingMusicPlays()
+        {
+            if (!this.musicLoaded) return;
+            while (this.pendingMusicPlays.Count > 0)
+            {
+                var pending = this.pendingMusicPlays.Dequeue();
+                AudioClip audioClip;
+                this.loadedMusic.TryGetValue(pending.musicName, out audioClip);
+                if (audioClip != null)
+                {
+                    new MusicManager.MusicInstance(pending.script, pending.musicEvent, this.GetAudioSource(), audioClip);
+                    this.logger.LogInfo("Playing queued music (" + pending.musicName + ")");
+                }
+                else
+                {
+                    this.logger.LogWarning("Queued music (" + pending.musicName + ") is null, cannot play. Maybe it wasn't loaded correctly?");
+                }
+            }
+        }
+
+        private void RemovePendingMusicPlays(string targetTag = null)
+        {
+            if (this.pendingMusicPlays.Count == 0) return;
+            var remaining = new Queue<PendingMusicPlay>();
+            while (this.pendingMusicPlays.Count > 0)
+            {
+                var pending = this.pendingMusicPlays.Dequeue();
+                bool shouldRemove = false;
+                if (targetTag == null)
+                {
+                    shouldRemove = true;
+                }
+                else if (pending.musicEvent.tag == targetTag)
+                {
+                    shouldRemove = true;
+                }
+                if (!shouldRemove)
+                {
+                    remaining.Enqueue(pending);
+                }
+                else
+                {
+                    this.logger.LogDebug($"Removed queued music play for '{pending.musicName}' (tag: {pending.musicEvent.tag ?? "null"})");
+                }
+            }
+            this.pendingMusicPlays = remaining;
+        }
+
         public void StopMusic(string targetTag = null)
         {
+            this.RemovePendingMusicPlays(targetTag);
             foreach (MusicManager.MusicInstance musicInstance in new List<MusicManager.MusicInstance>(MusicManager.musicInstances))
             {
                 if (targetTag == null || !(musicInstance.musicEvent.tag != targetTag))
@@ -173,6 +233,7 @@ namespace PizzaTowerEscapeMusic
 
         public void FadeStopMusic(string targetTag = null)
         {
+            this.RemovePendingMusicPlays(targetTag);
             foreach (MusicManager.MusicInstance musicInstance in new List<MusicManager.MusicInstance>(MusicManager.musicInstances))
             {
                 if (targetTag == null || !(musicInstance.musicEvent.tag != targetTag))
@@ -228,6 +289,8 @@ namespace PizzaTowerEscapeMusic
                 }
             }
             logger.LogInfo("Music clips done loading");
+            this.musicLoaded = true;
+            this.ProcessPendingMusicPlays();
         }
 
         public void UnloadMusicClips()
@@ -237,6 +300,8 @@ namespace PizzaTowerEscapeMusic
                 audioClip.UnloadAudioData();
             }
             this.loadedMusic.Clear();
+            this.musicLoaded = false;
+            this.pendingMusicPlays.Clear();
             this.logger.LogInfo("All music clips unloaded");
         }
 
@@ -315,6 +380,17 @@ namespace PizzaTowerEscapeMusic
         private static readonly Stack<AudioSource> audioSourcePool = new Stack<AudioSource>();
 
         private readonly Dictionary<string, AudioClip> loadedMusic = new Dictionary<string, AudioClip>();
+
+        private bool musicLoaded = false;
+
+        private Queue<PendingMusicPlay> pendingMusicPlays = new Queue<PendingMusicPlay>();
+
+        private struct PendingMusicPlay
+        {
+            public Script script;
+            public ScriptEvent_PlayMusic musicEvent;
+            public string musicName;
+        }
 
         private class MusicInstance
         {

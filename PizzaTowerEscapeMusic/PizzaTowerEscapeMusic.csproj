@@ -41,6 +41,8 @@
     <Compile Include="Scripting\Conditions\Condition_PlayerHealth.cs" />
     <Compile Include="Scripting\Conditions\Condition_PlayerInsanity.cs" />
     <Compile Include="Scripting\Conditions\Condition_PlayerLocation.cs" />
+    <Compile Include="Scripting\Conditions\Condition_PlayerAlone.cs" />
+    <Compile Include="Scripting\Conditions\Condition_FiringPlayers.cs" />
     <Compile Include="Scripting\Conditions\Condition_Random.cs" />
     <Compile Include="Scripting\Conditions\Condition_ShipLanded.cs" />
     <Compile Include="Scripting\Conditions\Condition_ShipInOrbit.cs" />

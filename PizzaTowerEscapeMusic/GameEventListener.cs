@@ -88,6 +88,8 @@ namespace PizzaTowerEscapeMusic
             this.CheckShipReturnToOrbit();
             this.CheckShipInOrbit();
             this.CheckShipNotInOrbit();
+            this.CheckFiringPlayers();
+            this.CheckGameOver();
             this.CheckShipLeavingAlertCalled();
             this.CheckPlayerDamaged();
             this.CheckPlayerDeath();
@@ -205,7 +207,7 @@ namespace PizzaTowerEscapeMusic
             }
             if (flag)
             {
-                this.logger.LogDebug("Ship returned to orbit");
+                this.logger.LogDebug("Ship returning to orbit");
                 this.OnShipReturnToOrbit();
             }
         }
@@ -281,11 +283,11 @@ namespace PizzaTowerEscapeMusic
             }
             if (flag)
             {
-                this.logger.LogDebug("Player entered facility");
+                this.logger.LogDebug("Player entered the facility");
                 this.OnPlayerEnteredFacility();
                 return;
             }
-            this.logger.LogDebug("Player exited facility");
+            this.logger.LogDebug("Player exited the facility");
             this.OnPlayerExitedFacility();
         }
 
@@ -299,11 +301,11 @@ namespace PizzaTowerEscapeMusic
             }
             if (flag)
             {
-                this.logger.LogDebug("Player entered ship");
+                this.logger.LogDebug("Player entered the ship");
                 this.OnPlayerEnteredShip();
                 return;
             }
-            this.logger.LogDebug("Player exited ship");
+            this.logger.LogDebug("Player exited the ship");
             this.OnPlayerExitedShip();
         }
 
@@ -365,6 +367,36 @@ namespace PizzaTowerEscapeMusic
             {
                 this.logger.LogDebug("Ship not in orbit");
                 this.OnShipNotInOrbit();
+            }
+        }
+
+        private void CheckFiringPlayers()
+        {
+            bool firingPlayers = StartOfRound.Instance != null && StartOfRound.Instance.firingPlayersCutsceneRunning;
+            bool wasFiringPlayers = this.UpdateCached<bool>("FiringPlayers", firingPlayers, false);
+            if (firingPlayers == wasFiringPlayers)
+            {
+                return;
+            }
+            if (firingPlayers)
+            {
+                this.logger.LogDebug("Firing players cutscene running");
+                this.OnFiringPlayers();
+            }
+        }
+
+        private void CheckGameOver()
+        {
+            bool gameOver = StartOfRound.Instance != null && StartOfRound.Instance.suckingPlayersOutOfShip;
+            bool wasGameOver = this.UpdateCached<bool>("GameOver", gameOver, false);
+            if (gameOver == wasGameOver)
+            {
+                return;
+            }
+            if (gameOver)
+            {
+                this.logger.LogDebug("Game over");
+                this.OnGameOver();
             }
         }
 
@@ -447,6 +479,14 @@ namespace PizzaTowerEscapeMusic
         };
 
         public Action OnShipNotInOrbit = delegate
+        {
+        };
+
+        public Action OnFiringPlayers = delegate
+        {
+        };
+
+        public Action OnGameOver = delegate
         {
         };
 

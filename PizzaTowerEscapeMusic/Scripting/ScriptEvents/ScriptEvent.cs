@@ -43,7 +43,9 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
             ShipInOrbit,
             ShipNotInOrbit,
             LevelLoaded,
-            EndOfGame
+            EndOfGame,
+            FiringPlayers,
+            GameOver
         }
     }
 }

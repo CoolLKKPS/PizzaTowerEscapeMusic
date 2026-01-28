@@ -1,0 +1,9 @@
+{
+  "name": "PizzaTowerEscapeMusic_ForkForMe",
+  "version_number": "2.4.8",
+  "website_url": "https://github.com/CoolLKKPS/PizzaTowerEscapeMusic",
+  "description": "Plays music from Pizza Tower when the early ship leave alert appears",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2304"
+  ]
+}

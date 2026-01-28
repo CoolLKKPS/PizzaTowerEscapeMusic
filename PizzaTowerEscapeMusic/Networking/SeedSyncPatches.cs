@@ -25,11 +25,11 @@ namespace PizzaTowerEscapeMusic.Networking
             {
                 var harmony = new Harmony("com.pizzatowerescapemusic.seedsync");
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
-                logger.LogInfo("Seed sync Harmony patches applied successfully");
+                logger.LogInfo("SeedSync Harmony patches applied successfully");
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed to apply seed sync Harmony patches: {ex}");
+                logger.LogError($"Failed to apply SeedSync Harmony patches: {ex}");
             }
         }
 
@@ -39,11 +39,11 @@ namespace PizzaTowerEscapeMusic.Networking
             {
                 var harmony = new Harmony("com.pizzatowerescapemusic.seedsync");
                 harmony.UnpatchSelf();
-                logger.LogInfo("Seed sync Harmony patches removed");
+                logger.LogInfo("SeedSync Harmony patches removed");
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed to remove seed sync Harmony patches: {ex}");
+                logger.LogError($"Failed to remove SeedSync Harmony patches: {ex}");
             }
         }
     }

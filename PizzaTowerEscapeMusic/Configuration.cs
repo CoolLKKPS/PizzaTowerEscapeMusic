@@ -13,6 +13,7 @@ namespace PizzaTowerEscapeMusic
             this.dontQueue = config.Bind<bool>("General", "DontQueue", true, new ConfigDescription("Whether to not queue randomization events even RandomMapSeed not fully ready, UseRandomMapSeed required", null, Array.Empty<object>()));
             this.scriptingScripts = config.Bind<string>("Scripting", "Scripts", "Default", new ConfigDescription("The names of the JSON script files that will be loaded (Separated by commas, do not put a space after the commas)", null, Array.Empty<object>()));
             this.volumeMaster = config.Bind<float>("Volume", "Master", 0.5f, new ConfigDescription("The volume of the music as a whole, all volumes are scaled by this value", null, Array.Empty<object>()));
+            this.volumeMaster.SettingChanged += (sender, args) => { };
             this.RemoveObsoleteEntries();
         }
 
@@ -50,7 +51,7 @@ namespace PizzaTowerEscapeMusic
         private readonly ConfigFile config;
 
         internal ConfigEntry<bool> useRandomMapSeed;
-        
+
         internal ConfigEntry<bool> dontQueue;
 
         internal ConfigEntry<string> scriptingScripts;

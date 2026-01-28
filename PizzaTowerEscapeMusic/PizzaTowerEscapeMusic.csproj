@@ -63,6 +63,7 @@
     <Compile Include="Networking\SeedSyncService.cs" />
     <Compile Include="Networking\SeedSyncPatches.cs" />
     <Compile Include="EndOfGamePatches.cs" />
+    <Compile Include="LethalConfigIntegration.cs" />
     <Compile Include="System\Runtime\CompilerServices\NullableAttribute.cs" />
     <Compile Include="System\Runtime\CompilerServices\NullableContextAttribute.cs" />
     <Compile Include="System\Runtime\CompilerServices\RefSafetyRulesAttribute.cs" />
@@ -103,6 +104,9 @@
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="LethalConfig">
+      <HintPath>D:\Runtime dependencies (local)\BepInEx\plugins\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ namespace PizzaTowerEscapeMusic
             {
                 if (Type.GetType("FacilityMeltdown.MeltdownPlugin, FacilityMeltdown") == null)
                 {
-                    this.logger.LogInfo("FacilityMeltdown not detected, skipping integration.");
+                    this.logger.LogInfo("Could not find FacilityMeltdown mod, skipping");
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace PizzaTowerEscapeMusic
 
         private void OnDestroy()
         {
-            this.logger.LogDebug("FacilityMeltdown integration being destroyed.");
+            this.logger.LogDebug("FacilityMeltdown integration being destroyed");
         }
 
         private ManualLogSource logger;

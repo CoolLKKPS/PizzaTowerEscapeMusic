@@ -35,11 +35,18 @@ namespace PizzaTowerEscapeMusic
             try
             {
                 base.gameObject.AddComponent<FacilityMeltdownIntegration>().Initialize(logger, this.gameEventListener);
-                logger.LogInfo("FacilityMeltdown integration initialized.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogWarning("Failed to initialize FacilityMeltdown integration (this is normal if FacilityMeltdown is not installed): " + ex.Message);
+                logger.LogInfo("Could not initialize FacilityMeltdown integration, skipping");
+            }
+            try
+            {
+                LethalConfigIntegration.Initialize();
+            }
+            catch (Exception)
+            {
+                logger.LogInfo("Could not initialize LethalConfig integration, skipping");
             }
             base.gameObject.hideFlags = HideFlags.HideAndDontSave;
             logger.LogInfo("Plugin pizzatowerescapemusic is loaded!");

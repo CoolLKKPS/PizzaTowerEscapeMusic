@@ -8,7 +8,7 @@ namespace PizzaTowerEscapeMusic.Scripting.Conditions
         {
             if (string.IsNullOrEmpty(this.group))
             {
-                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("Condition_SelectedLabel: group must be specified and non-empty.");
+                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogError("Condition_SelectedLabel: group must be specified and non-empty");
                 return false;
             }
             string selectedLabel;

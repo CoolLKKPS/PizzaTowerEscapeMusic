@@ -422,8 +422,10 @@ namespace PizzaTowerEscapeMusic
             public void Update(float deltaTime)
             {
                 float num = (this.isStopping ? 0f : this.volumeGroup.GetVolume(this.script));
-                float num2 = (this.isStopping ? this.volumeGroup.stoppingVolumeLerpSpeed : this.volumeGroup.volumeLerpSpeed);
-                this.volume = Mathf.Lerp(this.volume, num, num2 * deltaTime);
+                float baseSpeed = (this.isStopping ? this.volumeGroup.stoppingVolumeLerpSpeed : this.volumeGroup.volumeLerpSpeed);
+                float speedScale = (this.isStopping ? this.volumeGroup.GetStoppingVolumeLerpSpeedScale(this.script) : this.volumeGroup.GetVolumeLerpSpeedScale(this.script));
+                float effectiveSpeed = baseSpeed * speedScale;
+                this.volume = Mathf.Lerp(this.volume, num, effectiveSpeed * deltaTime);
                 this.audioSource.volume = this.volume * PizzaTowerEscapeMusicManager.Configuration.volumeMaster.Value;
                 if (!this.audioSource.isPlaying || (this.isStopping && this.audioSource.volume < 0.005f))
                 {
@@ -438,7 +440,9 @@ namespace PizzaTowerEscapeMusic
                     return;
                 }
                 this.isStopping = true;
-                this.FadeSpeed = this.volumeGroup.stoppingVolumeLerpSpeed;
+                // this.FadeSpeed = this.volumeGroup.stoppingVolumeLerpSpeed;
+                float speedScale = this.volumeGroup.GetStoppingVolumeLerpSpeedScale(this.script);
+                this.FadeSpeed = this.volumeGroup.stoppingVolumeLerpSpeed * speedScale;
             }
 
             public void StopCompletely()

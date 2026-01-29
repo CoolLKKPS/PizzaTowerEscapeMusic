@@ -129,6 +129,10 @@ namespace PizzaTowerEscapeMusic.Scripting
             [JsonRequired]
             public float volumeScale;
 
+            public float volumeLerpSpeedScale = 1f;
+
+            public float stoppingVolumeLerpSpeedScale = 1f;
+
             public Condition condition;
         }
 
@@ -153,6 +157,32 @@ namespace PizzaTowerEscapeMusic.Scripting
                     }
                 }
                 return num * this.masterVolume;
+            }
+
+            public float GetVolumeLerpSpeedScale(Script script)
+            {
+                float scale = 1f;
+                foreach (Script.VolumeModifier volumeModifier in this.volumeModifiers)
+                {
+                    if (volumeModifier.condition == null || volumeModifier.condition.Check(script))
+                    {
+                        scale *= volumeModifier.volumeLerpSpeedScale;
+                    }
+                }
+                return scale;
+            }
+
+            public float GetStoppingVolumeLerpSpeedScale(Script script)
+            {
+                float scale = 1f;
+                foreach (Script.VolumeModifier volumeModifier in this.volumeModifiers)
+                {
+                    if (volumeModifier.condition == null || volumeModifier.condition.Check(script))
+                    {
+                        scale *= volumeModifier.stoppingVolumeLerpSpeedScale;
+                    }
+                }
+                return scale;
             }
 
             public string comment = string.Empty;

@@ -123,16 +123,21 @@ namespace PizzaTowerEscapeMusic
                 string.Format("\nAny music playing?:          {0}", this.GetIsMusicPlaying(null)),
                 string.Format("\nAny music playing with tag?: {0}", this.GetIsMusicPlaying(musicEvent.tag))
             }));
-            string text = musicEvent.musicNames[global::UnityEngine.Random.Range(0, musicEvent.musicNames.Length)];
+            string mainMusicName = musicEvent.musicNames[global::UnityEngine.Random.Range(0, musicEvent.musicNames.Length)];
+            string introMusicName = null;
+            if (musicEvent.introMusicNames != null && musicEvent.introMusicNames.Length > 0)
+            {
+                introMusicName = musicEvent.introMusicNames[global::UnityEngine.Random.Range(0, musicEvent.introMusicNames.Length)];
+            }
             if (!this.musicLoaded)
             {
                 this.pendingMusicPlays.Enqueue(new PendingMusicPlay
                 {
                     script = script,
                     musicEvent = musicEvent,
-                    musicName = text
+                    musicName = mainMusicName
                 });
-                this.logger.LogDebug($"Music not loaded yet, queued play request for '{text}' (queue size: {this.pendingMusicPlays.Count})");
+                this.logger.LogDebug($"Music not loaded yet, queued play request for '{mainMusicName}' (queue size: {this.pendingMusicPlays.Count})");
                 return;
             }
             if (musicEvent.overlapHandling == ScriptEvent_PlayMusic.OverlapHandling.IgnoreAll && this.GetIsMusicPlaying(null))
@@ -160,15 +165,20 @@ namespace PizzaTowerEscapeMusic
                     this.FadeStopMusic(musicEvent.tag);
                     break;
             }
-            AudioClip audioClip;
-            this.loadedMusic.TryGetValue(text, out audioClip);
-            if (audioClip != null)
+            AudioClip mainClip;
+            this.loadedMusic.TryGetValue(mainMusicName, out mainClip);
+            AudioClip introClip = null;
+            if (introMusicName != null)
             {
-                new MusicManager.MusicInstance(script, musicEvent, this.GetAudioSource(), audioClip);
-                this.logger.LogInfo("Playing music (" + text + ")");
+                this.loadedMusic.TryGetValue(introMusicName, out introClip);
+            }
+            if (mainClip != null)
+            {
+                new MusicManager.MusicInstance(script, musicEvent, this.GetAudioSource(), mainClip, introClip);
+                this.logger.LogInfo("Playing music (" + mainMusicName + ")" + (introMusicName != null ? " with intro (" + introMusicName + ")" : ""));
                 return;
             }
-            this.logger.LogWarning("Music (" + text + ") is null, cannot play. Maybe it wasn't loaded correctly?");
+            this.logger.LogWarning("Music (" + mainMusicName + ") is null, cannot play. Maybe it wasn't loaded correctly?");
         }
 
         private void ProcessPendingMusicPlays()
@@ -177,12 +187,18 @@ namespace PizzaTowerEscapeMusic
             while (this.pendingMusicPlays.Count > 0)
             {
                 var pending = this.pendingMusicPlays.Dequeue();
-                AudioClip audioClip;
-                this.loadedMusic.TryGetValue(pending.musicName, out audioClip);
-                if (audioClip != null)
+                AudioClip mainClip;
+                this.loadedMusic.TryGetValue(pending.musicName, out mainClip);
+                AudioClip introClip = null;
+                if (pending.musicEvent.introMusicNames != null && pending.musicEvent.introMusicNames.Length > 0)
                 {
-                    new MusicManager.MusicInstance(pending.script, pending.musicEvent, this.GetAudioSource(), audioClip);
-                    this.logger.LogInfo("Playing queued music (" + pending.musicName + ")");
+                    string introMusicName = pending.musicEvent.introMusicNames[global::UnityEngine.Random.Range(0, pending.musicEvent.introMusicNames.Length)];
+                    this.loadedMusic.TryGetValue(introMusicName, out introClip);
+                }
+                if (mainClip != null)
+                {
+                    new MusicManager.MusicInstance(pending.script, pending.musicEvent, this.GetAudioSource(), mainClip, introClip);
+                    this.logger.LogInfo("Playing queued music (" + pending.musicName + ")" + (introClip != null ? " with intro" : ""));
                 }
                 else
                 {
@@ -283,6 +299,18 @@ namespace PizzaTowerEscapeMusic
                             if (!(audioClip == null))
                             {
                                 loadedMusic.Add(musicName, audioClip);
+                            }
+                        }
+                    }
+                    string[] introMusicNames = scriptEvent_PlayMusic.introMusicNames;
+                    foreach (string introMusicName in introMusicNames)
+                    {
+                        if (!loadedMusic.ContainsKey(introMusicName))
+                        {
+                            AudioClip audioClip = await LoadMusicClip(introMusicName);
+                            if (!(audioClip == null))
+                            {
+                                loadedMusic.Add(introMusicName, audioClip);
                             }
                         }
                     }
@@ -394,13 +422,24 @@ namespace PizzaTowerEscapeMusic
 
         private class MusicInstance
         {
-            public MusicInstance(Script script, ScriptEvent_PlayMusic musicEvent, AudioSource audioSource, AudioClip musicClip)
+            public MusicInstance(Script script, ScriptEvent_PlayMusic musicEvent, AudioSource audioSource, AudioClip musicClip, AudioClip introClip = null)
             {
                 this.script = script;
                 this.musicEvent = musicEvent;
                 this.audioSource = audioSource;
-                audioSource.clip = musicClip;
-                audioSource.loop = musicEvent.loop;
+                this.introClip = introClip;
+                this.mainClip = musicClip;
+                this.isIntroPlaying = introClip != null;
+                if (this.isIntroPlaying)
+                {
+                    audioSource.clip = introClip;
+                    audioSource.loop = false;
+                }
+                else
+                {
+                    audioSource.clip = mainClip;
+                    audioSource.loop = musicEvent.loop;
+                }
                 audioSource.Play();
                 MusicManager.musicInstances.Add(this);
                 if (musicEvent.tag != null)
@@ -421,13 +460,23 @@ namespace PizzaTowerEscapeMusic
 
             public void Update(float deltaTime)
             {
+                bool wasJustSwitched = this.justSwitched;
+                this.justSwitched = false;
+                if (this.isIntroPlaying && !this.audioSource.isPlaying)
+                {
+                    this.isIntroPlaying = false;
+                    this.audioSource.clip = this.mainClip;
+                    this.audioSource.loop = this.musicEvent.loop;
+                    this.audioSource.Play();
+                    this.justSwitched = true;
+                }
                 float num = (this.isStopping ? 0f : this.volumeGroup.GetVolume(this.script));
                 float baseSpeed = (this.isStopping ? this.volumeGroup.stoppingVolumeLerpSpeed : this.volumeGroup.volumeLerpSpeed);
                 float speedScale = (this.isStopping ? this.volumeGroup.GetStoppingVolumeLerpSpeedScale(this.script) : this.volumeGroup.GetVolumeLerpSpeedScale(this.script));
                 float effectiveSpeed = baseSpeed * speedScale;
                 this.volume = Mathf.Lerp(this.volume, num, effectiveSpeed * deltaTime);
                 this.audioSource.volume = this.volume * PizzaTowerEscapeMusicManager.Configuration.volumeMaster.Value;
-                if (!this.audioSource.isPlaying || (this.isStopping && this.audioSource.volume < 0.005f))
+                if ((!this.audioSource.isPlaying && !wasJustSwitched) || (this.isStopping && this.audioSource.volume < 0.005f))
                 {
                     this.StopCompletely();
                 }
@@ -466,6 +515,14 @@ namespace PizzaTowerEscapeMusic
             public Script.VolumeGroup volumeGroup;
 
             private bool isStopping;
+
+            private AudioClip introClip;
+
+            private AudioClip mainClip;
+            
+            private bool isIntroPlaying;
+            
+            private bool justSwitched;
 
             private float volume;
         }

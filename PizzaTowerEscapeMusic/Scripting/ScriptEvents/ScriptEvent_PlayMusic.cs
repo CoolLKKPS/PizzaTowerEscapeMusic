@@ -26,6 +26,8 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
         [JsonRequired]
         public string[] musicNames = Array.Empty<string>();
 
+        public string[] introMusicNames = Array.Empty<string>();
+
         public enum OverlapHandling
         {
             IgnoreAll,

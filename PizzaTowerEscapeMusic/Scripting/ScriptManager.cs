@@ -105,6 +105,14 @@ namespace PizzaTowerEscapeMusic.Scripting
             {
                 this.CheckScriptEvents(ScriptEvent.GameEventType.EndOfGame);
             }));
+            gameEventListener.OnFiringPlayers = (Action)Delegate.Combine(gameEventListener.OnFiringPlayers, new Action(delegate
+            {
+                this.CheckScriptEvents(ScriptEvent.GameEventType.FiringPlayers);
+            }));
+            gameEventListener.OnGameOver = (Action)Delegate.Combine(gameEventListener.OnGameOver, new Action(delegate
+            {
+                this.CheckScriptEvents(ScriptEvent.GameEventType.GameOver);
+            }));
             gameEventListener.OnShipNotInOrbit = (Action)Delegate.Combine(gameEventListener.OnShipNotInOrbit, new Action(delegate
             {
                 this.CheckScriptEvents(ScriptEvent.GameEventType.ShipNotInOrbit);

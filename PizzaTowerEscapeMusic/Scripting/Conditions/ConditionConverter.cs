@@ -35,6 +35,7 @@ public class ConditionConverter : JsonConverter<Condition>
             "MusicWithTagPlaying" => new Condition_MusicWithTagPlaying(),
             "CurrentMoon" => new Condition_CurrentMoon(),
             "Timer" => new Condition_Timer(),
+            "Counter" => new Condition_Counter(),
             "Random" => new Condition_Random(),
             "ApparatusDocked" => new Condition_ApparatusDocked(),
             "TimeOfDay" => new Condition_TimeOfDay(),

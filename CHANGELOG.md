@@ -1,5 +1,5 @@
-### 2.5.1
-- I'm must be too tired, fix typo in 2.5.0 changelog, and fix `ResetCounters` completely not working
+### 2.5.2
+- I'm must be too tired, fix typo in 2.5.0 changelog, and fix `ResetCounters`, `Counter` completely not working
 
 ### 2.5.0
 - Breaking changes to `Timer` condition, now timer won't reset by itself, it must be reset by `ResetTimers` script event

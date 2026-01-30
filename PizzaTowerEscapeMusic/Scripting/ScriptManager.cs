@@ -13,6 +13,7 @@ namespace PizzaTowerEscapeMusic.Scripting
         public ScriptManager(string[] scriptNames, GameEventListener gameEventListener)
         {
             this.Logger = BepInEx.Logging.Logger.CreateLogSource("PizzaTowerEscapeMusic ScriptManager");
+            this.gameEventListener = gameEventListener;
             Script script = new Script();
             this.loadedScripts.Add(script);
             foreach (string text in scriptNames)
@@ -60,6 +61,14 @@ namespace PizzaTowerEscapeMusic.Scripting
             gameEventListener.OnShipInOrbit = (Action)Delegate.Combine(gameEventListener.OnShipInOrbit, new Action(delegate
             {
                 this.CheckScriptEvents(ScriptEvent.GameEventType.ShipInOrbit);
+            }));
+            gameEventListener.OnShipInOrbit = (Action)Delegate.Combine(gameEventListener.OnShipInOrbit, new Action(delegate
+            {
+                if (this.pendingManualLabelSelection)
+                {
+                    this.pendingManualLabelSelection = false;
+                    this.ApplySelectedLabels();
+                }
             }));
             gameEventListener.OnShipLeavingAlertCalled = (Action)Delegate.Combine(gameEventListener.OnShipLeavingAlertCalled, new Action(delegate
             {
@@ -122,7 +131,16 @@ namespace PizzaTowerEscapeMusic.Scripting
                 this.CheckScriptEvents(ScriptEvent.GameEventType.CurrentMoonChanged);
             }));
             this.Logger.LogInfo("Done loading scripts");
+            this.ApplySelectedLabels();
         }
+
+        private GameEventListener gameEventListener;
+
+        private bool pendingManualLabelSelection = false;
+        
+        private bool selectLabelManuallyValid = true;
+
+        public bool SelectLabelManuallyValid => selectLabelManuallyValid;
 
         public ManualLogSource Logger { get; private set; }
 
@@ -215,5 +233,59 @@ namespace PizzaTowerEscapeMusic.Scripting
         private bool enablelogCooldown = true;
 
         public readonly List<Script> loadedScripts = new List<Script>();
+
+        public void ApplySelectedLabels()
+        {
+            if (StartOfRound.Instance != null && !StartOfRound.Instance.inShipPhase)
+            {
+                this.pendingManualLabelSelection = true;
+                this.Logger.LogInfo("Cannot apply manual label selection when not in ship phase, Changes pending");
+                return;
+            }
+            this.pendingManualLabelSelection = false;
+            string configValue = PizzaTowerEscapeMusicManager.Configuration?.selectLabelManually?.Value;
+            if (string.IsNullOrWhiteSpace(configValue))
+            {
+                this.selectLabelManuallyValid = true;
+                return;
+            }
+            var entries = configValue.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var groupToLabel = new Dictionary<string, string>();
+            bool isValid = true;
+            foreach (var entry in entries)
+            {
+                var parts = entry.Split(new char[] { ':' }, 2);
+                if (parts.Length != 2)
+                {
+                    this.Logger.LogWarning($"Invalid selectLabelManually entry: '{entry}', expected Group:Label");
+                    isValid = false;
+                    continue;
+                }
+                string group = parts[0].Trim();
+                string label = parts[1].Trim();
+                if (string.IsNullOrEmpty(group) || string.IsNullOrEmpty(label))
+                {
+                    this.Logger.LogWarning($"Empty group or label in entry: '{entry}'");
+                    isValid = false;
+                    continue;
+                }
+                if (groupToLabel.ContainsKey(group))
+                {
+                    this.Logger.LogWarning($"Duplicate group '{group}' in selectLabelManually configuration, will use label '{label}' (previous label '{groupToLabel[group]}')");
+                }
+                groupToLabel[group] = label;
+            }
+            this.selectLabelManuallyValid = isValid;
+            foreach (var kvp in groupToLabel)
+            {
+                string group = kvp.Key;
+                string label = kvp.Value;
+                foreach (var script in this.loadedScripts)
+                {
+                    script.selectedLabelsByGroup[group] = label;
+                }
+                this.Logger.LogDebug($"Applied manual label selection: group='{group}', label='{label}'");
+            }
+        }
     }
 }

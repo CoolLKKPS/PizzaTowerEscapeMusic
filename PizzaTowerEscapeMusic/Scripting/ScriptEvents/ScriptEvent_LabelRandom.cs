@@ -204,6 +204,32 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
 
         private static void SelectLabel(Script script, string group, List<(string label, float weight)> entries, float totalWeight, float randomValue)
         {
+            string configValue = PizzaTowerEscapeMusicManager.Configuration?.selectLabelManually?.Value;
+            if (!string.IsNullOrWhiteSpace(configValue))
+            {
+                var scriptManager = PizzaTowerEscapeMusicManager.ScriptManager;
+                if (scriptManager != null && scriptManager.SelectLabelManuallyValid)
+                {
+                    var entriesConfig = configValue.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var entry in entriesConfig)
+                    {
+                        var parts = entry.Split(new char[] { ':' }, 2);
+                        if (parts.Length == 2)
+                        {
+                            string configGroup = parts[0].Trim();
+                            string configLabel = parts[1].Trim();
+                            if (configGroup.Equals(group))
+                            {
+                                string groupKey = string.IsNullOrEmpty(group) ? "" : group;
+                                script.selectedLabelsByGroup[groupKey] = configLabel;
+                                PizzaTowerEscapeMusicManager.ScriptManager.Logger.LogDebug($"LabelRandom: using manually selected label '{configLabel}' for group '{groupKey}'");
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
             float accumulated = 0f;
             string selected = null;
 

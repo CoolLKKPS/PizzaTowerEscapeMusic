@@ -21,6 +21,15 @@ namespace PizzaTowerEscapeMusic
                 Step = 0.01f
             });
             LethalConfigManager.AddConfigItem(slider);
+
+            var selectLabelEntry = PizzaTowerEscapeMusicManager.Configuration.selectLabelManually;
+            var textInput = new TextInputFieldConfigItem(selectLabelEntry, new TextInputFieldOptions
+            {
+                Name = "Select Label Manually",
+                RequiresRestart = false,
+                CharacterLimit = 200
+            });
+            LethalConfigManager.AddConfigItem(textInput);
         }
     }
 }

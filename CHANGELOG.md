@@ -1,3 +1,10 @@
+### 2.5.0
+- Fixed GameEventType `FiringPlayers`, `GameOver` completly not working
+- Added options in VolumeModifier `volumeLerpSpeedScale` and `stoppingVolumeLerpSpeedScale`
+- Added option in PlayMusic `introMusicNames`, yes just like PAYDAY
+- Added conditionType `PlayerFearLevel`
+- Added config option `SelectLabelManually`, support LethalConfig
+
 ### 2.4.8
 - Necessary music will be queued when trying to play but still loading
 - Add GameEventType `LevelLoaded`, `EndOfGame`, `FiringPlayers`, `GameOver`

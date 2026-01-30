@@ -137,7 +137,7 @@ namespace PizzaTowerEscapeMusic.Scripting
         private GameEventListener gameEventListener;
 
         private bool pendingManualLabelSelection = false;
-        
+
         private bool selectLabelManuallyValid = true;
 
         public bool SelectLabelManuallyValid => selectLabelManuallyValid;
@@ -225,6 +225,14 @@ namespace PizzaTowerEscapeMusic.Scripting
             foreach (Script script in this.loadedScripts)
             {
                 script.ClearTimers();
+            }
+        }
+
+        public void ClearAllScriptCounters()
+        {
+            foreach (Script script in this.loadedScripts)
+            {
+                script.ClearCounters();
             }
         }
 

@@ -522,9 +522,9 @@ namespace PizzaTowerEscapeMusic
             private AudioClip introClip;
 
             private AudioClip mainClip;
-            
+
             private bool isIntroPlaying;
-            
+
             private bool justSwitched;
 
             private float volume;

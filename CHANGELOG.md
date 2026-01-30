@@ -1,8 +1,10 @@
 ### 2.5.0
+- Breaking changes to `Timer` condition, now timer won't reset by itself, it must be reset by `ResetTimer` script event
 - Fixed GameEventType `FiringPlayers`, `GameOver` completly not working
 - Added options in VolumeModifier `volumeLerpSpeedScale` and `stoppingVolumeLerpSpeedScale`
 - Added option in PlayMusic `introMusicNames`, yes just like PAYDAY
-- Added conditionType `PlayerFearLevel`
+- Added conditionType `PlayerFearLevel`, `Counter`
+- Added scriptEventType `ResetCounter`
 - Added config option `SelectLabelManually`, support LethalConfig
 
 ### 2.4.8

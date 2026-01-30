@@ -75,6 +75,16 @@ namespace PizzaTowerEscapeMusic.Scripting
             this.activeTimers.Remove(timerName);
         }
 
+        public void ClearCounters()
+        {
+            this.activeCounters.Clear();
+        }
+
+        internal void ClearCounter(string counterName)
+        {
+            this.activeCounters.Remove(counterName);
+        }
+
         public string comment = string.Empty;
 
         public bool isAddon;
@@ -92,6 +102,9 @@ namespace PizzaTowerEscapeMusic.Scripting
 
         [JsonIgnore]
         public readonly Dictionary<string, Script.Timer> activeTimers = new Dictionary<string, Script.Timer>();
+
+        [JsonIgnore]
+        public readonly Dictionary<string, Script.Counter> activeCounters = new Dictionary<string, Script.Counter>();
 
         [JsonIgnore]
         public string selectedLabel
@@ -210,6 +223,18 @@ namespace PizzaTowerEscapeMusic.Scripting
             public string name;
 
             public float time;
+        }
+
+        public class Counter
+        {
+            public Counter(string name)
+            {
+                this.name = name;
+            }
+
+            public string name;
+
+            public int count;
         }
     }
 }

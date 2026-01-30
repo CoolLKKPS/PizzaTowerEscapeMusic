@@ -29,9 +29,11 @@ namespace PizzaTowerEscapeMusic
             }));
             GameEventListener gameEventListener3 = this.gameEventListener;
             gameEventListener3.OnSoundManagerDestroyed = (Action)Delegate.Combine(gameEventListener3.OnSoundManagerDestroyed, new Action(PizzaTowerEscapeMusicManager.MusicManager.UnloadMusicClips));
-			PizzaTowerEscapeMusicManager.ScriptManager = new ScriptManager(PizzaTowerEscapeMusicManager.Configuration.scriptingScripts.Value.Split(','), this.gameEventListener);
+            PizzaTowerEscapeMusicManager.ScriptManager = new ScriptManager(PizzaTowerEscapeMusicManager.Configuration.scriptingScripts.Value.Split(','), this.gameEventListener);
             GameEventListener gameEventListener4 = this.gameEventListener;
             gameEventListener4.OnSoundManagerDestroyed = (Action)Delegate.Combine(gameEventListener4.OnSoundManagerDestroyed, new Action(PizzaTowerEscapeMusicManager.ScriptManager.ClearAllScriptTimers));
+            GameEventListener gameEventListener5 = this.gameEventListener;
+            gameEventListener5.OnSoundManagerDestroyed = (Action)Delegate.Combine(gameEventListener5.OnSoundManagerDestroyed, new Action(PizzaTowerEscapeMusicManager.ScriptManager.ClearAllScriptCounters));
             try
             {
                 base.gameObject.AddComponent<FacilityMeltdownIntegration>().Initialize(logger, this.gameEventListener);

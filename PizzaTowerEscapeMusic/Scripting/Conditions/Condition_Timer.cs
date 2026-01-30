@@ -12,15 +12,31 @@ namespace PizzaTowerEscapeMusic.Scripting.Conditions
                 timer = new Script.Timer(this.timerName);
                 script.activeTimers.Add(this.timerName, timer);
             }
-            if (timer.time >= this.timeGoal)
+
+            ConditionComparableNumber.ComparisonType comparison = this.timerComparisonType ?? ConditionComparableNumber.ComparisonType.GreaterThanOrEquals;
+            bool result = false;
+            switch (comparison)
             {
-                if (this.resetsTimer)
-                {
-                    timer.time = 0f;
-                }
-                return true;
+                case ConditionComparableNumber.ComparisonType.Equals:
+                    result = timer.time == this.timeGoal;
+                    break;
+                case ConditionComparableNumber.ComparisonType.NotEquals:
+                    result = timer.time != this.timeGoal;
+                    break;
+                case ConditionComparableNumber.ComparisonType.GreaterThan:
+                    result = timer.time > this.timeGoal;
+                    break;
+                case ConditionComparableNumber.ComparisonType.LessThan:
+                    result = timer.time < this.timeGoal;
+                    break;
+                case ConditionComparableNumber.ComparisonType.GreaterThanOrEquals:
+                    result = timer.time >= this.timeGoal;
+                    break;
+                case ConditionComparableNumber.ComparisonType.LessThanOrEquals:
+                    result = timer.time <= this.timeGoal;
+                    break;
             }
-            return false;
+            return result;
         }
 
         [JsonRequired]
@@ -29,6 +45,6 @@ namespace PizzaTowerEscapeMusic.Scripting.Conditions
         [JsonRequired]
         public float timeGoal;
 
-        public bool resetsTimer = true;
+        public ConditionComparableNumber.ComparisonType? timerComparisonType;
     }
 }

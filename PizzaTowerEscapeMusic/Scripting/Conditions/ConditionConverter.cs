@@ -26,6 +26,7 @@ public class ConditionConverter : JsonConverter<Condition>
             "PlayerHealth" => new Condition_PlayerHealth(),
             "PlayerCrouching" => new Condition_PlayerCrouching(),
             "PlayerInsanity" => new Condition_PlayerInsanity(),
+            "PlayerFearLevel" => new Condition_PlayerFearLevel(),
             "PlayerAlone" => new Condition_PlayerAlone(),
             "FiringPlayers" => new Condition_FiringPlayers(),
             "ShipLanded" => new Condition_ShipLanded(),

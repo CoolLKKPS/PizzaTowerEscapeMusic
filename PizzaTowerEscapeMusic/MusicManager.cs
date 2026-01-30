@@ -462,13 +462,16 @@ namespace PizzaTowerEscapeMusic
             {
                 bool wasJustSwitched = this.justSwitched;
                 this.justSwitched = false;
-                if (this.isIntroPlaying && !this.audioSource.isPlaying)
+                if (this.isIntroPlaying)
                 {
-                    this.isIntroPlaying = false;
-                    this.audioSource.clip = this.mainClip;
-                    this.audioSource.loop = this.musicEvent.loop;
-                    this.audioSource.Play();
-                    this.justSwitched = true;
+                    if (!this.audioSource.isPlaying || this.audioSource.time >= this.introClip.length - deltaTime)
+                    {
+                        this.isIntroPlaying = false;
+                        this.audioSource.clip = this.mainClip;
+                        this.audioSource.loop = this.musicEvent.loop;
+                        this.audioSource.Play();
+                        this.justSwitched = true;
+                    }
                 }
                 float num = (this.isStopping ? 0f : this.volumeGroup.GetVolume(this.script));
                 float baseSpeed = (this.isStopping ? this.volumeGroup.stoppingVolumeLerpSpeed : this.volumeGroup.volumeLerpSpeed);

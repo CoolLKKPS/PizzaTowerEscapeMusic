@@ -6,7 +6,6 @@
         {
             if (this.targetTimerNames == null)
             {
-                script.ClearTimers();
                 return;
             }
             foreach (string text in this.targetTimerNames)

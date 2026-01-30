@@ -6,7 +6,6 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
         {
             if (this.targetCounterNames == null)
             {
-                script.ClearCounters();
                 return;
             }
             foreach (string counterName in this.targetCounterNames)

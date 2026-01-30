@@ -22,17 +22,24 @@ namespace PizzaTowerEscapeMusic.Scripting.ScriptEvents
                 {
                     if (!(text == "ResetTimers"))
                     {
-                        if (!(text == "LabelRandom"))
+                        if (!(text == "ResetCounters"))
                         {
-                            if (!(text == "SetVolumeGroupMasterVolume"))
+                            if (!(text == "LabelRandom"))
                             {
-                                throw new Exception(string.Format("Condition type \"{0}\" does not exist", jtoken));
+                                if (!(text == "SetVolumeGroupMasterVolume"))
+                                {
+                                    throw new Exception(string.Format("Condition type \"{0}\" does not exist", jtoken));
+                                }
+                                scriptEvent = new ScriptEvent_SetVolumeGroupMasterVolume();
                             }
-                            scriptEvent = new ScriptEvent_SetVolumeGroupMasterVolume();
+                            else
+                            {
+                                scriptEvent = new ScriptEvent_LabelRandom();
+                            }
                         }
                         else
                         {
-                            scriptEvent = new ScriptEvent_LabelRandom();
+                            scriptEvent = new ScriptEvent_ResetCounters();
                         }
                     }
                     else

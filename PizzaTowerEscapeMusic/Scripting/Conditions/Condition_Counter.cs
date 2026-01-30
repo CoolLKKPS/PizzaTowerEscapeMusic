@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace PizzaTowerEscapeMusic.Scripting.Conditions
 {
-    public class Condition_Counter : ConditionComparableNumber
+    public class Condition_Counter : Condition
     {
         public override bool Check(Script script)
         {

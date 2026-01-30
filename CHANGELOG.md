@@ -1,3 +1,11 @@
+### 2.5.3
+- I'm sorry i made a terrible update third times, i must apologize for not testing `Counter` things, finally fixed `Counter`
+- To let u understand why, cuz i really think this will be easy to implement, but i messed things up...
+- You should be no need to add `comparisonType` property now, but you still can add it if u want, property name changed to `counterComparisonType`
+- Default behavior is `GreaterThanOrEquals`, just like what i done in `Timer` (`"timerComparisonType": "GreaterThanOrEquals"`)
+- You might notice why not use `comparisonType`, timer and counter can have default behavior, but health, fear level etc. should not, i know there's a better way just need to remove a tiny code
+- Anyway, should be all good now
+
 ### 2.5.2
 - I'm must be too tired, fix typo in 2.5.0 changelog, and fix `ResetCounters`, `Counter` completely not working
 
